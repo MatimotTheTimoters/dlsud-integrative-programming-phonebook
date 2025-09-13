@@ -66,6 +66,8 @@ namespace S_ITPC316LA_LabAct3_Phonebook_BIT34_StaAna
         {
             AssignInput();
             myHelper.AddUser(name, phoneNumber);
+            ClearBind();
+            BindData();
             ClearInput();
         }
 
