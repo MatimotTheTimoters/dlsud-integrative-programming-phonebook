@@ -75,25 +75,22 @@ namespace DataAccess
             return newPeople;
         }
 
-        public ArrayList DeleteUser(string name, int phoneNumber)
+        public bool DeleteUser(string name, int phoneNumber)
         {
-            int index = 0;
-            foreach (Person person in people)
+            for (int i = 0; i < people.Count; i++)
             {
-                string personName = person.Name;
-                int personPhoneNumber = person.PhoneNumber;
-                
-                if (personName == name &&
-                    personPhoneNumber == phoneNumber)
-                {
-                    people.RemoveAt(index);
-                    return people;
-                }
+                Person person = (Person)people[i];
+                if (person == null) continue;
 
-                index++;
+                if (person.Name == name &&
+                    person.PhoneNumber == phoneNumber)
+                {
+                    people.RemoveAt(i);
+                    return true;
+                }
             }
 
-            return people;
+            return false;
         }
     }
 }
