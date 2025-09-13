@@ -78,8 +78,15 @@ namespace S_ITPC316LA_LabAct3_Phonebook_BIT34_StaAna
         private void btnSearch_Click(object sender, EventArgs e)
         {
             AssignInput();
-            ArrayList newPeople = new ArrayList();
-            newPeople = myHelper.GetUsers(name, phoneNumber);
+            ArrayList newPeople = myHelper.GetUsers(name, phoneNumber);
+
+            if (newPeople == null ||
+                newPeople.Count == 0)
+            {
+                MessageBox.Show("No matching records found.", "Search", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                ClearBind();
+                return;
+            }
             BindData(newPeople);
         }
 
