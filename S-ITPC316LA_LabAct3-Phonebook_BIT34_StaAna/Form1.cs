@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using DataAccess;
 using System.Collections;
+using System.Windows.Forms.VisualStyles;
 
 namespace S_ITPC316LA_LabAct3_Phonebook_BIT34_StaAna
 {
@@ -90,17 +91,37 @@ namespace S_ITPC316LA_LabAct3_Phonebook_BIT34_StaAna
 
         private void btnDelete_Click(object sender, EventArgs e)
         {
-            // Get cell count
-            int selectedRowCount = gridViewPeople.Rows.GetRowCount(DataGridViewElementStates.Selected);
-            if (selectedRowCount > 0 && selectedRowCount < 2)
+            // Check there is row selected
+            if (gridViewPeople.SelectedRows == null ||
+                gridViewPeople.SelectedRows.Count == 0)
             {
-                // Get selected row
-                DataGridViewRow selectedRow = gridViewPeople.SelectedRows[0];
-                string name = selectedRow.Cells[0].Value.ToString();
-                int phoneNumber = Convert.ToInt32(selectedRow.Cells[1].Value);
+                MessageBox.Show("Please select a single row to delete.", "Delete", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+            
+            // Limit to single selection
+            if (gridViewPeople.SelectedRows.Count > 1)
+            {
+                MessageBox.Show("Please select only one row to delete.", "Delete", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
 
-                myHelper.DeleteUser(name, phoneNumber);
+            DataGridViewRow selectedRow = gridViewPeople.SelectedRows[0];
+
+            string name = selectedRow.Cells[0].Value.ToString();
+            int phoneNumber = Convert.ToInt32(selectedRow.Cells[1].Value.ToString());
+
+            bool deleted = myHelper.DeleteUser(name, phoneNumber);
+
+            if (deleted)
+            {
+                MessageBox.Show($"Deleted {name} ({phoneNumber}).", "Deleted", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                ClearBind();
                 BindData();
+            }
+            else
+            {
+                MessageBox.Show("Could not find specified user.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
     }
