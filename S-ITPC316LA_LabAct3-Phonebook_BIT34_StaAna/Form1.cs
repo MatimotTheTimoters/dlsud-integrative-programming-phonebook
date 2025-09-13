@@ -71,8 +71,35 @@ namespace S_ITPC316LA_LabAct3_Phonebook_BIT34_StaAna
 
         private void btnEdit_Click(object sender, EventArgs e)
         {
-            AssignInput();
-            //myHelper.EditUser(name, phoneNumber);
+            // Check if there are selected rows
+            bool isRowSelected = gridViewPeople.SelectedRows != null &&
+                                 gridViewPeople.SelectedRows.Count > 0;
+            if (!isRowSelected)
+            {
+                MessageBox.Show("Please select a single row to edit.", "Edit", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            bool isMultipleSelection = gridViewPeople.SelectedRows.Count > 1;
+            if (isMultipleSelection)
+            {
+                MessageBox.Show("Please select only one row to edit.", "Edit", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+
+            DataGridViewRow selectedRow = gridViewPeople.SelectedRows[0];
+
+            string oldName = selectedRow.Cells[0].Value.ToString();
+            int oldPhoneNumber = Convert.ToInt32(selectedRow.Cells[1].Value.ToString());
+
+            string newName = txtBoxName.Text; 
+            int newPhoneNumber = Convert.ToInt32(txtBoxPhoneNumber.Text);
+
+            myHelper.EditUser(oldName, oldPhoneNumber, newName, newPhoneNumber);
+            MessageBox.Show($"Updated record: {oldName} ({oldPhoneNumber}) -> {newName} ({newPhoneNumber})", "Edit Successful", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            ClearBind();
+            BindData();
+            ClearInput();
         }
 
         private void btnSearch_Click(object sender, EventArgs e)
